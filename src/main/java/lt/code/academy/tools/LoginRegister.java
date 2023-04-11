@@ -69,9 +69,12 @@ public class LoginRegister {
         }
 
         do {
-            //System.out.println("Enter correct password for user " + userName + ":");
-            //password = Utilities.inputValidString(sc);
-            password = readPassword("Enter correct password for user " + userName + ":");
+            //uzkomentuoti pass paslepimui
+            System.out.println("Enter correct password for user " + userName + ":");
+            password = Utilities.inputValidString(sc);
+
+            //atkomentuoti pass paslepimui
+            //password = readPassword("Enter correct password for user " + userName + ":");
 
             if (!loggedUser.getPassword().equals(DigestUtils.sha256Hex(password))) {
                 passwordIsValid = false;
@@ -131,13 +134,18 @@ public class LoginRegister {
             System.out.println("Enter your surname.");
             surName = Utilities.inputValidString(sc);
 
-            //System.out.print("Enter your password: ");
-            //password = sc.nextLine();
-            password = readPassword("Enter password: ");
+            //uzkomentuoti pass paslepimui
+            System.out.print("Enter your password: ");
+            password = sc.nextLine();
+            //atkomentuoti pass paslepimui
+            //password = readPassword("Enter password: ");
 
-            //System.out.print("Enter super password to set you as administrator: ");
-            //superPassword = sc.nextLine();
-            superPassword = readPassword("Enter super password to set you as administrator: ");
+            //uzkomentuoti pass paslepimui
+            System.out.print("Enter super password to set you as administrator: ");
+            superPassword = sc.nextLine();
+
+            //atkomentuoti pass paslepimui
+            //superPassword = readPassword("Enter super password to set you as administrator: ");
 
             if (DigestUtils.sha256Hex(superPassword).equals(DigestUtils.sha256Hex("31428571"))) {
                 is_admin = true;
