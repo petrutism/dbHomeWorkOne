@@ -1,8 +1,11 @@
 package lt.code.academy.tools;
+
 import static lt.code.academy.tools.Print.*;
+
 import lt.code.academy.data.Question;
 import lt.code.academy.data.Reader;
 import lt.code.academy.data.Task;
+import lt.code.academy.data.User;
 
 import java.sql.Connection;
 import java.util.Scanner;
@@ -56,7 +59,7 @@ public class Utilities {
     public static void printTaskQuestions(int task_id, Connection c) {
         Reader.readQuestions(c);
         for (Question q : Reader.questions) {
-            if (task_id == q.getTask_id()) {
+            if (task_id == q.task_id()) {
                 System.out.println(q);
             }
         }
@@ -65,7 +68,7 @@ public class Utilities {
     public static boolean questionTextIsUnique(String text, Connection c) {
         Reader.readQuestions(c);
         for (Question q : Reader.questions)
-            if (text.equals(q.getBody())) {
+            if (text.equals(q.body())) {
                 return false;
             }
         return true;
@@ -74,4 +77,21 @@ public class Utilities {
     public static boolean answerIsValid(String answer) {
         return (answer.equals("a") || answer.equals("b") || answer.equals("c"));
     }
+
+    public static void printAllUsers(Connection c) {
+        Reader.readUsers(c);
+        for (User u : Reader.users) {
+            System.out.println(u);
+        }
+    }
+    public static boolean userNameInUse(String userName) {
+        for (User u : Reader.users) {
+            if (u.getUserName().equals(userName)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

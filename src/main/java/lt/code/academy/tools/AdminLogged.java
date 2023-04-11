@@ -1,6 +1,8 @@
 package lt.code.academy.tools;
 
+import jdk.jshell.execution.Util;
 import lt.code.academy.data.*;
+
 import static lt.code.academy.tools.Print.*;
 
 import java.sql.Connection;
@@ -20,20 +22,21 @@ class AdminLogged {
                 case "2" -> createQuestion(sc, c);
                 case "3" -> modifyTask(sc, c);
                 case "4" -> Fill.writeUsers(c);
-                case "5" -> Fill.writeTasks(c);
-                case "6" -> Fill.writeExam(c);
-                case "7" -> Fill.setGrade(c);
-                case "8" -> Clear.clearTasks(c);
-                case "9" -> Stats.abcTotal(c);
-                case "10" -> {
+                case "5" -> deleteUser(sc, c);
+                case "6" -> Fill.writeTasks(c);
+                case "7" -> Fill.writeExam(c);
+                case "8" -> Fill.setGrade(c);
+                case "9" -> Clear.clearTasks(c);
+                case "10" -> Stats.abcTotal(c);
+                case "11" -> {
                     String sql = "select \"TASK_ID\", \"NAME\", COUNT(\"TASK_ID\") from (select distinct e.\"USER_ID\", e.\"TASK_ID\", t.\"NAME\" from \"Exam\" e join \"Task\" t on e.\"TASK_ID\" = t.\"ID\" group by \"TASK_ID\", \"USER_ID\", \"NAME\" order by \"TASK_ID\") as nt group by \"TASK_ID\", \"NAME\";";
                     Stats.count(c, sql);
                 }
-                case "11" -> {
+                case "12" -> {
                     String sql = "select t.\"ID\" as \"TASK_ID\", t.\"NAME\" , COUNT(a.\"IS_CORRECT\") from (\"Exam\" e join \"Answer\" a on e.\"ANSWER_ID\" = a.\"ID\") join \"Task\" t on e.\"TASK_ID\" = t.\"ID\"  where a.\"IS_CORRECT\" = true group by t.\"ID\" , t.\"NAME\" order by t.\"ID\";";
                     Stats.count(c, sql);
                 }
-                case "12" -> Stats.avgCorrect(c);
+                case "13" -> Stats.avgCorrect(c);
                 case "X" -> pSuccess("Logged out from administrative tools...");
                 default -> pError("There is no such action...");
             }
@@ -53,15 +56,23 @@ class AdminLogged {
 
             System.out.println("Enter question number to modify.");
             int modifySerialNumber = Integer.parseInt(Utilities.inputValidString(sc));
+
             System.out.println("Input new question text.");
             String newText = Utilities.inputValidString(sc);
-            Writer.modifyQuestion(modifyTaskId, modifySerialNumber, newText, c);
+
+            if(Utilities.questionTextIsUnique(newText, c)) {
+                Writer.modifyQuestion(modifyTaskId, modifySerialNumber, newText, c);
+            } else {
+                pError("We already have this question...");
+            }
+
         } else {
             pError("You can modify only existing task...");
         }
     }
 
     private void createTask(Scanner sc, Connection c) {
+        Utilities.printAllTasks(c);
         String taskName;
         boolean taskNameIsInUse = false;
         Utilities.printAllTasks(c);
@@ -109,7 +120,7 @@ class AdminLogged {
         Reader.readQuestions(c);
 
         for (Question q : Reader.questions) {
-            if (taskId == q.getTask_id()) {
+            if (taskId == q.task_id()) {
                 numberOfQuestions++;
             }
         }
@@ -129,8 +140,8 @@ class AdminLogged {
                 Reader.readQuestions(c);
 
                 for (Question q : Reader.questions) {
-                    if (taskId == q.getTask_id() && newSerialNumber == q.getSerial_number()) {
-                        questionId = q.getId();
+                    if (taskId == q.task_id() && newSerialNumber == q.serial_number()) {
+                        questionId = q.id();
                         break;
                     }
                 }
@@ -174,20 +185,34 @@ class AdminLogged {
         Reader.readAnswers(c);
     }
 
+    private void deleteUser(Scanner sc, Connection c) {
+        Utilities.printAllUsers(c);
+        System.out.println("Input username to delete.");
+        String usernameToDelete = Utilities.inputValidString(sc);
+
+        if (Utilities.userNameInUse(usernameToDelete)) {
+            Writer.userDeletion(usernameToDelete, c);
+        } else {
+            pError("There is no such username...");
+        }
+    }
+
+
 
     private void adminMenu() {
         System.out.println("1 -> Create new task");
         System.out.println("2 -> Create new question");
         System.out.println("3 -> Modify task data");
         pAlert("4 -> ALERT: Register fake users to full table");
-        pAlert("5 -> ALERT: Create fake Tasks and Questions with Answers to full table");
-        pAlert("6 -> ALERT: Take fake exams to full table");
-        pAlert("7 -> ALERT: Set grades to full table");
-        pAlert("8 -> ALERT: Clear Tasks, Questions, Answers, Exams and Grades");
-        System.out.println("9 -> STATS: abcTotal");
-        System.out.println("10 -> STATS: timesTotal");
-        System.out.println("11 -> STATS: correctNumberByTaskID");
-        System.out.println("12 -> STATS: avgCorrect");
+        pAlert("5 -> ALERT: Delete user");
+        pAlert("6 -> ALERT: Create fake Tasks and Questions with Answers to full table");
+        pAlert("7 -> ALERT: Take fake exams to full table");
+        pAlert("8 -> ALERT: Set grades to full table");
+        pAlert("9 -> ALERT: Clear Tasks, Questions, Answers, Exams and Grades");
+        System.out.println("10 -> STATS: abcTotal");
+        System.out.println("11 -> STATS: timesTotal");
+        System.out.println("12 -> STATS: correctNumberByTaskID");
+        System.out.println("13 -> STATS: avgCorrect");
         System.out.println("X -> Logout administrator");
     }
 }

@@ -1,5 +1,7 @@
 package lt.code.academy.data;
+
 import static lt.code.academy.tools.Print.*;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +12,7 @@ public class Reader {
     public final static List<Question> questions = new ArrayList<>();
     public final static List<Answer> answers = new ArrayList<>();
     public final static List<Exam> exams = new ArrayList<>();
-        public final static List<Grade> grades = new ArrayList<>();
+    public final static List<Grade> grades = new ArrayList<>();
 
     public static void readQuestions(Connection c) {
         questions.clear();
@@ -36,7 +38,8 @@ public class Reader {
             pError("Something's get wrong when reading questions: " + e.getMessage());
         }
     }
-    public static void readAnswers(Connection c){
+
+    public static void readAnswers(Connection c) {
         answers.clear();
         int id;
         int question_id;
@@ -110,7 +113,8 @@ public class Reader {
             pError("Something's get wrong when reading users: " + e.getMessage());
         }
     }
-    public static void readExams(Connection c){
+
+    public static void readExams(Connection c) {
         exams.clear();
         int id;
         int task_id;
@@ -131,13 +135,14 @@ public class Reader {
                 answer_id = rs.getInt("ANSWER_ID");
                 timestamp = rs.getTimestamp("DATE_TIME");
 
-               exams.add(new Exam(id, task_id, user_id, question_id, answer_id, timestamp));
+                exams.add(new Exam(id, task_id, user_id, question_id, answer_id, timestamp));
             }
             stmt.close();
         } catch (SQLException e) {
             pError("Something's get wrong when reading users: " + e.getMessage());
         }
     }
+
     public static void readGrades(Connection c) {
         grades.clear();
         int task_id;

@@ -1,5 +1,5 @@
 package lt.code.academy;
-
+import static lt.code.academy.tools.Print.*;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -13,7 +13,7 @@ public class ApplicationProperties {
         try (InputStream stream = this.getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE_NAME)) {
             properties.load(stream);
         } catch (Exception e) {
-            System.out.println("Cannot read properties file..." + e.getMessage());
+            pError("Cannot read properties file..." + e.getMessage());
         }
     }
 

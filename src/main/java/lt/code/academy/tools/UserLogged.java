@@ -59,8 +59,8 @@ public class UserLogged {
         Reader.readQuestions(c);
         Reader.readAnswers(c);
         for (Question q : Reader.questions) {
-            if (taskId == q.getTask_id()) {
-                question_id = q.getId();
+            if (taskId == q.task_id()) {
+                question_id = q.id();
                 System.out.println(q);
                 for (Answer a : Reader.answers) {
                     if (question_id == a.getQuestion_id()) {
@@ -91,11 +91,11 @@ public class UserLogged {
         Reader.readGrades(c);
         Reader.readTasks(c);
         for (Grade g : Reader.grades) {
-            if (logged_user_id == g.getUser_id()) {
+            if (logged_user_id == g.user_id()) {
                 for (Task t : Reader.tasks) {
-                    if (g.getTask_id() == t.getId()) {
+                    if (g.task_id() == t.getId()) {
                         taskName = t.getName();
-                        System.out.println(taskName + " -> " + g.getGrade());
+                        System.out.println(taskName + " -> " + g.grade());
                     }
                 }
             }

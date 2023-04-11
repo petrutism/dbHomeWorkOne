@@ -15,6 +15,7 @@ public class Print {
     public static void pAlert(String text){
         System.out.println(fAlert.format(text));
     }
+
     public static void pError(String text){
         System.out.println(fError.format(text));
     }

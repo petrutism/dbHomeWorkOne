@@ -126,7 +126,7 @@ public class LoginRegister {
                 System.out.println("Enter your username.");
                 userName = Utilities.inputValidString(sc);
 
-                userNameIsInUse = userNameInUse(userName);
+                userNameIsInUse = Utilities.userNameInUse(userName);
             } while (userNameIsInUse);
 
             System.out.println("Enter your name.");
@@ -156,14 +156,6 @@ public class LoginRegister {
         }
     }
 
-    private boolean userNameInUse(String userName) {
-        for (User u : Reader.users) {
-            if (u.getUserName().equals(userName)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     private void loginMenu() {
         String text = """

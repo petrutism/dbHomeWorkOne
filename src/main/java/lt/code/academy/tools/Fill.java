@@ -64,7 +64,7 @@ public class Fill {
 
             for (int i = 1; i < Reader.tasks.size() + 1; i++) {
                 for (Question q : Reader.questions) {
-                    if (i == q.getTask_id()) {
+                    if (i == q.task_id()) {
                         taskQuestions.add(q);
                     }
                 }
@@ -150,7 +150,6 @@ public class Fill {
                 } else {
                     questionAnswers.clear();
                 }
-
             }
             stmt.executeBatch();
 
@@ -230,6 +229,7 @@ public class Fill {
                 }
             }
             stmt.executeBatch();
+
             c.commit();
             c.setAutoCommit(true);
             stmt.close();
@@ -262,6 +262,7 @@ public class Fill {
                 gradeStmt.addBatch();
             }
             gradeStmt.executeBatch();
+
             c.commit();
             c.setAutoCommit(true);
             stmt.close();
@@ -297,6 +298,7 @@ public class Fill {
                 stmt.addBatch();
             }
             stmt.executeBatch();
+
             c.commit();
             c.setAutoCommit(true);
             stmt.close();

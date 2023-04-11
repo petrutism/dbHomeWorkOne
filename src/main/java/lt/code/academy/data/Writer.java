@@ -78,6 +78,19 @@ public class Writer {
         }
     }
 
+    public static void userDeletion(String userNameToDelete, Connection c) {
+        String sql = "delete from \"User\" where \"USERNAME\" = ?;";
+        PreparedStatement stmt;
+        try {
+            stmt = c.prepareStatement(sql);
+            stmt.setString(1, userNameToDelete);
+            stmt.executeUpdate();
+            stmt.close();
+            pSuccess("User successfully deleted...");
+        } catch (SQLException e) {
+            pError("Something's get wrong when deleting user: " + e.getMessage());
+        }
+    }
     public static void writeAnswer(int question_id, String body, String variant, boolean is_correct, Connection c) {
         String sql = "insert into \"Answer\" (\"QUESTION_ID\", \"BODY\", \"VARIANT\", \"IS_CORRECT\") VALUES (?, ?, ?, ?);";
         PreparedStatement stmt;

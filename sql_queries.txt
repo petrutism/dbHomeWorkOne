@@ -1,0 +1,117 @@
+create database "db_homework";
+
+create table "Task" (
+"ID" SERIAL not null primary key,
+"NAME" varchar(50) not null,
+CONSTRAINT taskname_unique UNIQUE ("NAME")
+);
+
+create table "Question" (
+"ID" SERIAL not null primary key,
+"TASK_ID" integer not null,
+constraint fk_Task_ID
+foreign key ("TASK_ID")
+references "Task"("ID")
+on delete cascade
+on update cascade,
+"SERIAL_NUMBER" int not null,
+"BODY" varchar(250) not null,
+CONSTRAINT question_body_unique UNIQUE ("BODY")
+);
+
+create table "Answer" (
+"ID" SERIAL not null primary key,
+"QUESTION_ID" integer not null,
+constraint fk_Question_ID
+foreign key ("QUESTION_ID")
+references "Question"("ID")
+on delete cascade
+on update cascade,
+"BODY" varchar(250) not null,
+"VARIANT" char(1) not null,
+"IS_CORRECT" boolean not null
+);
+
+create table "User" (
+"ID" SERIAL not null primary key,
+"USERNAME" varchar(20) not null,
+"NAME" varchar(50),
+"SURNAME" varchar(150),
+"PASSWORD" varchar(256) not null,
+"IS_ADMIN" boolean default false,
+CONSTRAINT username_unique UNIQUE ("USERNAME")
+);
+
+create table "Exam" (
+"ID" SERIAL not null primary key,
+"TASK_ID" integer not null,
+constraint fk_Task_ID
+foreign key ("TASK_ID")
+references "Task"("ID")
+on delete cascade
+on update cascade,
+"USER_ID" integer not null,
+constraint fk_User_ID
+foreign key ("USER_ID")
+references "User"("ID")
+on delete cascade
+on update cascade,
+"QUESTION_ID" integer not null,
+constraint fk_Question_ID
+foreign key ("QUESTION_ID")
+references "Question"("ID")
+on delete cascade
+on update cascade,
+"ANSWER_ID" integer not null,
+constraint fk_Answer_ID
+foreign key ("ANSWER_ID")
+references "Answer"("ID")
+on delete cascade
+on update cascade,
+"DATE_TIME" timestamp not null
+);
+
+create table "Grade" (
+"TASK_ID" integer not null,
+constraint fk_Task_ID foreign key ("TASK_ID") references "Task"("ID") on delete cascade on update cascade,
+"USER_ID" integer not null,
+constraint fk_User_ID foreign key ("USER_ID") references "User"("ID") on delete cascade on update cascade,
+"GRADE" integer not null,
+primary key ("TASK_ID", "USER_ID")
+);
+
+--------
+kiek pasirinkta variantu a, b, c
+--------
+select COUNT("ANSWER_ID") from "Exam" as e join "Answer" as a on a."ID" = e."ANSWER_ID" where a."VARIANT" = 'a';
+select COUNT("ANSWER_ID") from "Exam" as e join "Answer" as a on a."ID" = e."ANSWER_ID" where a."VARIANT" = 'b';
+select COUNT("ANSWER_ID") from "Exam" as e join "Answer" as a on a."ID" = e."ANSWER_ID" where a."VARIANT" = 'c';
+--------
+kiek kartu laikytas task numeris ...
+--------
+select "TASK_ID", COUNT("TASK_ID") from (select distinct "USER_ID", "TASK_ID" from "Exam" group by "TASK_ID", "USER_ID" order by "TASK_ID") as nt group by "TASK_ID";
+--------
+kiek is viso teisingu atsakymu
+--------
+select COUNT(a."IS_CORRECT") from "Exam" e join "Answer" a on e."ANSWER_ID" = a."ID" where a."IS_CORRECT" = true;
+--------
+kiek is viso kiekvieno egzamino teisingu
+--------
+select t."ID" , t."NAME" , COUNT(a."IS_CORRECT") from ("Exam" e join "Answer" a on e."ANSWER_ID" = a."ID") join "Task" t on e."TASK_ID" = t."ID"  where a."IS_CORRECT" = true group by t."ID" , t."NAME" order by t."ID" ;
+--------
+studento id, task id, teisingu atsakymu skaicius
+--------
+select u."ID" , e."TASK_ID" , COUNT(a."IS_CORRECT") from "Exam" e join "Answer" a on e."ANSWER_ID" = a."ID" join "User" u on u."ID" = e."USER_ID" where a."IS_CORRECT" = true group by u."ID", e."TASK_ID" order by u."ID", e."TASK_ID";
+arba
+select e."USER_ID", e."TASK_ID", COUNT(a."IS_CORRECT") from "Exam" e join "Answer" a on e."ANSWER_ID" = a."ID" where a."IS_CORRECT" = true group by e."USER_ID", e."TASK_ID" order by e."USER_ID", e."TASK_ID";
+--------
+vidutiniskai teisingu atsakymu pas kiekviena studenta
+--------
+select avg(noc."correct") from (select u."ID" , e."TASK_ID" , COUNT(a."IS_CORRECT") as "correct" from "Exam" e join "Answer" a on e."ANSWER_ID" = a."ID" join "User" u on u."ID" = e."USER_ID" where a."IS_CORRECT" = true group by u."ID", e."TASK_ID" order by u."ID", e."TASK_ID") as noc;
+arba
+select avg(noc."correct") from (select e."USER_ID", e."TASK_ID", COUNT(a."IS_CORRECT") as "correct" from "Exam" e join "Answer" a on e."ANSWER_ID" = a."ID" where a."IS_CORRECT" = true group by e."USER_ID", e."TASK_ID" order by e."USER_ID", e."TASK_ID") as noc;
+--------
+grade
+--------
+select e."USER_ID", e."TASK_ID", COUNT(a."IS_CORRECT")/2 as "GRADE" from "Exam" e join "Answer" a on e."ANSWER_ID" = a."ID" where a."IS_CORRECT" = true group by e."USER_ID", e."TASK_ID" order by e."USER_ID", e."TASK_ID";
+
