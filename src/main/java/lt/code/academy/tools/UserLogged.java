@@ -45,6 +45,10 @@ public class UserLogged {
         Reader.readExams(c);
         Utilities.printAllTasks(c);
 
+        if(Reader.tasks.isEmpty()){
+            return;
+        }
+
         do {
             System.out.println("Enter name of task to process exam:");
             taskName = Utilities.inputValidString(sc);
@@ -88,18 +92,25 @@ public class UserLogged {
 
     private void viewGradesByUser(Connection c) {
         String taskName;
+        boolean noGrades = true;
         Reader.readGrades(c);
         Reader.readTasks(c);
+
         for (Grade g : Reader.grades) {
             if (logged_user_id == g.user_id()) {
                 for (Task t : Reader.tasks) {
                     if (g.task_id() == t.getId()) {
                         taskName = t.getName();
                         System.out.println(taskName + " -> " + g.grade());
+                        noGrades = false;
                     }
                 }
             }
         }
+        if (noGrades) {
+            pError("You have no grades yet...");
+        }
+
     }
 
     private void userMenu() {

@@ -1,6 +1,5 @@
 package lt.code.academy.tools;
 
-import jdk.jshell.execution.Util;
 import lt.code.academy.data.*;
 
 import static lt.code.academy.tools.Print.*;
@@ -29,11 +28,17 @@ class AdminLogged {
                 case "9" -> Clear.clearTasks(c);
                 case "10" -> Stats.abcTotal(c);
                 case "11" -> {
-                    String sql = "select \"TASK_ID\", \"NAME\", COUNT(\"TASK_ID\") from (select distinct e.\"USER_ID\", e.\"TASK_ID\", t.\"NAME\" from \"Exam\" e join \"Task\" t on e.\"TASK_ID\" = t.\"ID\" group by \"TASK_ID\", \"USER_ID\", \"NAME\" order by \"TASK_ID\") as nt group by \"TASK_ID\", \"NAME\";";
+                    String sql = "select \"TASK_ID\", \"NAME\",COUNT(\"TASK_ID\")" +
+                            " from (select distinct e.\"USER_ID\", e.\"TASK_ID\", t.\"NAME\" from \"Exam\" e" +
+                            " join \"Task\" t on e.\"TASK_ID\" = t.\"ID\" group by \"TASK_ID\", \"USER_ID\"," +
+                            " \"NAME\" order by \"TASK_ID\") as nt group by \"TASK_ID\", \"NAME\";";
                     Stats.count(c, sql);
                 }
                 case "12" -> {
-                    String sql = "select t.\"ID\" as \"TASK_ID\", t.\"NAME\" , COUNT(a.\"IS_CORRECT\") from (\"Exam\" e join \"Answer\" a on e.\"ANSWER_ID\" = a.\"ID\") join \"Task\" t on e.\"TASK_ID\" = t.\"ID\"  where a.\"IS_CORRECT\" = true group by t.\"ID\" , t.\"NAME\" order by t.\"ID\";";
+                    String sql = "select t.\"ID\" as \"TASK_ID\", t.\"NAME\" , COUNT(a.\"IS_CORRECT\") from" +
+                            " (\"Exam\" e join \"Answer\" a on e.\"ANSWER_ID\" = a.\"ID\") join" +
+                            " \"Task\" t on e.\"TASK_ID\" = t.\"ID\"  where a.\"IS_CORRECT\" = true" +
+                            " group by t.\"ID\" , t.\"NAME\" order by t.\"ID\";";
                     Stats.count(c, sql);
                 }
                 case "13" -> Stats.avgCorrect(c);
@@ -72,7 +77,7 @@ class AdminLogged {
     }
 
     private void createTask(Scanner sc, Connection c) {
-        Utilities.printAllTasks(c);
+
         String taskName;
         boolean taskNameIsInUse = false;
         Utilities.printAllTasks(c);
