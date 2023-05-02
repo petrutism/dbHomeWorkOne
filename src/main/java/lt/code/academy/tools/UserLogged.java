@@ -14,7 +14,6 @@ import java.util.Scanner;
 public class UserLogged {
     UserLogged() {
     }
-
     int logged_user_id;
 
     public void userAction(Scanner sc, Connection c, int user_id) {

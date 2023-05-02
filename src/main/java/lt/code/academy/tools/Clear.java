@@ -1,11 +1,13 @@
 package lt.code.academy.tools;
+
 import static lt.code.academy.tools.Print.*;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class Clear {
-    public static void clearTasks(Connection c){
+    public static void clearTasks(Connection c) {
         String sql = "truncate table \"Task\", \"Question\", \"Answer\", \"Exam\", \"Grade\" restart identity;";
         PreparedStatement stmt;
         try {
@@ -17,7 +19,8 @@ public class Clear {
             pError("Something is going wrong when doing big clean: " + e.getMessage());
         }
     }
-    public static void clearGrades(Connection c){
+
+    public static void clearGrades(Connection c) {
         String sql = "truncate table \"Grade\" restart identity;";
         PreparedStatement stmt;
         try {

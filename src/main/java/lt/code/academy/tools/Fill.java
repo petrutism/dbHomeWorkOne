@@ -205,7 +205,6 @@ public class Fill {
                         questionsStatement.setInt(1, t);
                         questionsRs = questionsStatement.executeQuery();
                         while (questionsRs.next()) {
-
                             answersStatement = c.prepareStatement(answersSQL);
                             answersStatement.setInt(1, questionsRs.getInt("ID"));
                             answersRs = answersStatement.executeQuery();
@@ -247,7 +246,6 @@ public class Fill {
         String sqlInsert = "insert into \"Grade\" (\"TASK_ID\", \"USER_ID\", \"GRADE\") VALUES (?, ?, ?);";
         PreparedStatement stmt;
         PreparedStatement gradeStmt;
-
         ResultSet gradeRs;
 
         try {
@@ -275,7 +273,8 @@ public class Fill {
 
     public static void writeUsers(Connection c) {
         Reader.readUsers(c);
-        String sql = "insert into \"User\" (\"USERNAME\", \"NAME\", \"SURNAME\", \"PASSWORD\", \"IS_ADMIN\") VALUES (?, ?, ?, ?, ?);";
+        String sql = "insert into \"User\" (\"USERNAME\", \"NAME\", \"SURNAME\"," +
+                " \"PASSWORD\", \"IS_ADMIN\") VALUES (?, ?, ?, ?, ?);";
         PreparedStatement stmt;
 
         Set<String> usernames = new HashSet<>();

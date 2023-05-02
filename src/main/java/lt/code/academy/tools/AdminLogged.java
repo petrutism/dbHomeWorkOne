@@ -65,7 +65,7 @@ class AdminLogged {
             System.out.println("Input new question text.");
             String newText = Utilities.inputValidString(sc);
 
-            if(Utilities.questionTextIsUnique(newText, c)) {
+            if (Utilities.questionTextIsUnique(newText, c)) {
                 Writer.modifyQuestion(modifyTaskId, modifySerialNumber, newText, c);
             } else {
                 pError("We already have this question...");
@@ -77,7 +77,6 @@ class AdminLogged {
     }
 
     private void createTask(Scanner sc, Connection c) {
-
         String taskName;
         boolean taskNameIsInUse = false;
         Utilities.printAllTasks(c);
@@ -201,8 +200,6 @@ class AdminLogged {
             pError("There is no such username...");
         }
     }
-
-
 
     private void adminMenu() {
         System.out.println("1 -> Create new task");

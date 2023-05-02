@@ -156,7 +156,6 @@ public class LoginRegister {
         }
     }
 
-
     private void loginMenu() {
         String text = """
                 1 -> Login
@@ -181,6 +180,3 @@ public class LoginRegister {
         return password;
     }
 }
-
-
-
